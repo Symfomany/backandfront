@@ -1,0 +1,101 @@
+import React, { Component } from "react";
+import ajax from "./config";
+
+class FormMeetup extends Component {
+  constructor(props) {
+    super(props);
+
+    console.log(props);
+    this.state = {
+      title: "",
+      description: "sdfdsf",
+      url: "",
+      cover: true
+    };
+    this.add = this.add.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.reset = this.reset.bind(this);
+  }
+
+  add(e) {
+    e.preventDefault();
+    console.log(this.state);
+    ajax
+      .post("/create", this.state)
+      .then(response => {
+        this.props.refresh(response.data);
+        this.props.history.push("/");
+      })
+      .catch(e => alert("Erreur, veuillez réessayer plus tard"));
+  }
+
+  handleChange(e) {
+    let change = {};
+    change[e.target.name] = e.target.value;
+    this.setState(change);
+  }
+
+  reset() {
+    this.props.history.push("/");
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.add} onChange={this.handleChange}>
+        <div className="form-group">
+          <label htmlFor="title">Title</label>
+          <input
+            type="text"
+            className="form-control"
+            name="title"
+            id="title"
+            placeholder="Enter title"
+            defaultValue={this.state.title}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="title">URL</label>
+          <input
+            type="url"
+            className="form-control"
+            name="url"
+            id="url"
+            placeholder="http://"
+            defaultValue={this.state.url}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="desc">Description</label>
+          <textarea
+            className="form-control"
+            id="desc"
+            name="description"
+            placeholder="Enter description"
+            defaultValue={this.state.description}
+          />
+        </div>
+        <div className="form-check">
+          <label className="form-check-label">
+            <input
+              className="form-check-input"
+              name="cover"
+              type="checkbox"
+              value="true"
+              defaultChecked={this.state.cover}
+            />{" "}
+            Mise en page d'accueil
+          </label>
+        </div>
+        <hr />
+        <button type="submit" className="btn btn-primary">
+          Confirm Meetup
+        </button>
+        <button type="button" onClick={this.reset} className="btn btn-warning">
+          Retour à la liste
+        </button>
+      </form>
+    );
+  }
+}
+
+export default FormMeetup;

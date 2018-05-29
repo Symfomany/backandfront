@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+    h1="Coucou, je suis privé :)"
+    p=`Bienvenue ${user.name}`
+    if message.length > 0
+        p.alert.alert-success=message
+    a(href="/auth/logout") Deconnexion
